@@ -1,0 +1,7 @@
+var;val;meaning
+show;15;How many days back to show of moving averages?
+step;14;How many days use for the time window for moving average calculations?
+lag;30;How big lag (in days) to use for gain scores calculations?
+df;33;How many degrees of freedom to use for the basis spline in the top plot?
+plot_x;weight;What variable ought to be plotted on x-axis of the bottom plot?
+plot_y;chest_cm;What variable ought to be plotted on y-axis of the bottom plot?
