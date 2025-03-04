@@ -33,8 +33,8 @@
 #                                                        "R_forearm_cm", "L_forearm_cm")
 #
 
-
-library(targets) # to run the pipeline
+library(targets)   # to run the pipeline
+library(tidyverse) # to add new data
 library(patchwork) # to arrange plots
 
 #
@@ -48,25 +48,26 @@ source("master_function.R")
 #
 # run the analysis
 analyse_body_composition(
-  
+
   show = 15,
   step = 14,
   lag = 30,
   df = 33,
-  plot_x = "weight",
+  plot_x = "waist",
   plot_y = "chest_cm",
   cap_top = "Evolution of bodyweight (points) with trend fitted via basis spines (line)",
   cap_bottom = "Comparison of selected measure (ordinate) betweeen bulk/cut cycles (colour) conditional on weight (abscissa)
   Generally, lines to the left and up in the bottom plot compared to previous cycles imply success.",
-  
+
   add_new_line = F,
   new_line = c(
+
     place        = "Prague",
-    weight_kg    = NA,
+    weight_kg    = 72.0,
     phase        = "bulk",
-    waist_cm     = NA,
-    chest_cm     = NA,
-    neck_cm      = NA,
+    waist_cm     = 77.3,
+    chest_cm     = 112.7,
+    neck_cm      = 34.7,
     R_thigh_cm   = NA,
     R_calf_cm    = NA,
     L_thigh_cm   = NA,
@@ -75,8 +76,9 @@ analyse_body_composition(
     R_forearm_cm = NA,
     L_arm_cm     = NA,
     L_forearm_cm = NA
+
   )
-  
+
 )
 
 #

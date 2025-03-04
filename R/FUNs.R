@@ -8,6 +8,10 @@
 set_colours <- function() c("#999999","#E69F00","#56B4E9","#009E73","#F0E442","#0072B2","#D55E00","#CC79A7")
 
 #
+# EXTRACT INTEGER SEQUENCE FROM MINIMUM TO MAXIMIM ----
+minmax_seq <- function(a) floor( min(a, na.rm = T) ) : ceiling( max(a, na.rm = T) )
+
+#
 # PREPARE SETTINGS ----
 read_settings <- function(file) read.csv(file, sep = ";") %>%
   
@@ -72,7 +76,8 @@ plot_weight <- function(data, set) data %>%
   aes(x = date, y = weight_kg) +
   geom_point( aes(colour = phase), size = 5, alpha = .2) +
   geom_smooth(method = "lm", formula = y ~ splines::bs(x = x, df = set$df), linewidth = 1.25, colour = "black") +
-  theme_bw(base_size = 14) +
+  scale_y_continuous(breaks = minmax_seq(data$weight_kg), labels = minmax_seq(data$weight_kg) ) +
+  theme_bw(base_size = 12) +
   theme(legend.position = "bottom")
 
 #
@@ -87,12 +92,14 @@ plot_by_phase <- function(data, pal, outs, p = c("bulk", "cut", "maintain"), x =
     aes(x = get(x), y = get(y), colour = cycle, fill = cycle) +
     geom_point(size = 3, alpha = .3) +
     geom_smooth(method = line, formula = y ~ x) +
+    scale_x_continuous(breaks = minmax_seq(data[ , x]), labels = minmax_seq(data[ , x]) ) +
+    scale_y_continuous(breaks = minmax_seq(data[ , y]), labels = minmax_seq(data[ , y]) ) +
     scale_colour_manual(values = pal[c(3,4,2,8)]) +
     scale_fill_manual(values = alpha(pal[c(3,4,2,8)], .15) ) +
     facet_wrap(~ phase, nrow = 1, scales = "free_x") +
     labs(y = y, x = x) +
-    theme_bw(base_size = 14) +
-    theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom")
+    theme_bw(base_size = 12) +
+    theme(plot.title = element_text(hjust = 0.5), panel.grid.minor = element_blank(), legend.position = "bottom")
     
 )
 
@@ -165,15 +172,15 @@ get_message <- function(milestones, set) with(
   milestones, {
     
     # prepare info fo a message to be printed
-    cur_phase <- tail(phase, 1)
-    cur_start <- tail(date, 2)[1] - 1
-    cur_days <- as.numeric( difftime( tail(date, 1), tail(date, 2)[1] ) )
-    cur_weeks <- round(cur_days / 7, 2)
-    cur_years <- round(cur_days / 365, 2)
-    cur_gain <- tail(mov_av, 1) - tail(mov_av, 2)[1]
+    cur_phase  <- tail(phase, 1)
+    cur_start  <- tail(date, 2)[1] - 1
+    cur_days   <- as.numeric( difftime( tail(date, 1), tail(date, 2)[1] ) )
+    cur_weeks  <- round(cur_days / 7, 2)
+    cur_years  <- round(cur_days / 365, 2)
+    cur_gain   <- tail(mov_av, 1) - tail(mov_av, 2)[1]
     cur_change <- round(abs(cur_gain), 2)
-    cur_rate <- round( (cur_gain / cur_days ) * 30, 2)
-    cur_sign <- ifelse(sign(cur_gain) == 1, "gained", "lost")
+    cur_rate   <- round( (cur_gain / cur_days ) * 30, 2)
+    cur_sign   <- ifelse(sign(cur_gain) == 1, "gained", "lost")
     
     return(
       paste0(
